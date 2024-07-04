@@ -1,0 +1,1 @@
+I've created a new repository called myFlix-Client. I then installed react and react dom using the terminal. I created a src folder with html, scss, and jsx file. I then tested the build in the terminal using Parcel.
