@@ -4,25 +4,40 @@ import { MovieView } from "../movie-view/movie-view";
 
 export const MainView = () => {
     const [movies, setMovies] = useState([]);
+    const [selectedMovie, setSelectedMovie] = useState(null);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetch("https://natesmovieflix-742bdbb68d51.herokuapp.com/movies")
-            .then((response) => response.json())
+            .then((response) => {
+                if (response.headers.get("content-type")?.includes("application/json")) {
+                    return response.json();
+                } else {
+                    throw new Error("Response was not JSON");
+                }
+            })
             .then((data) => {
-                const moviesFromApi = data.docs.map((doc) => {
-                    return {
-                        id: doc.id,
-                        title: doc.title,
-                        director: doc.director?.name
-                    };
-                });
-                
+                if (!data || !Array.isArray(data)) {
+                    throw new Error('Invalid data format');
+                }
+
+                const moviesFromApi = data.map((doc) => ({
+                    id: doc._id,
+                    title: doc.Title,
+                    director: doc.Director?.Name,
+                }));
+
                 setMovies(moviesFromApi);
+            })
+            .catch((err) => {
+                console.error('Fetch error:', err);
+                setError(err.message);
             });
     }, []);
 
-    const [selectedMovie, setSelectedMovie] = useState(null);
-
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     if (selectedMovie) {
         return (
