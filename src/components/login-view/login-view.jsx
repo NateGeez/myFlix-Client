@@ -66,7 +66,7 @@ export const LoginView = ({ onLoggedIn }) => {
                                     placeholder="Enter you Password"
                                 />
                             </Form.Group>
-                            <Button variant="primary" type="submit">
+                            <Button variant="info" type="submit">
                                 Submit
                             </Button>
                         </Form>
