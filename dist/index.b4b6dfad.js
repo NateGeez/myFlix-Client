@@ -28474,7 +28474,7 @@ const LoginView = ({ onLoggedIn })=>{
             body: JSON.stringify(data)
         }).then((response)=>response.json()).then((data)=>{
             if (data.user && data.token) onLoggedIn(data.user, data.token);
-            else alert("Invalide username or password");
+            else alert("Invalid username or password");
         }).catch((e)=>{
             alert("Something went wrong");
         });
