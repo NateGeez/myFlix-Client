@@ -16,11 +16,12 @@ export const MainView = () => {
         }
 
         fetch("https://natesmovieflix-742bdbb68d51.herokuapp.com/movies", {
-            headers: { Authorization: 'Bearer ${token}' }
+            headers: { Authorization: `Bearer ${token}` }
         })
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
+                setMovies(data);
             });
     }, [token]);
 
