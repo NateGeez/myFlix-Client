@@ -1,5 +1,5 @@
-import React from "react";
 import { useState } from "react";
+import { Form, Button, Card, CardGroup, Container, Col, Row } from "react-bootstrap";
 
 export const LoginView = ({ onLoggedIn }) => {
     const [username, setUsername] = useState("");
@@ -10,24 +10,24 @@ export const LoginView = ({ onLoggedIn }) => {
         event.preventDefault();
 
         const data = {
-            access: username,
-            secret: password
+            Username: username,
+            Password: password
         };
 
-        fetch("https://natesmovieflix-742bdbb68d51.herokuapp.com/login.json", {
+        fetch("https://natesmovieflix-742bdbb68d51.herokuapp.com/login", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Cache-Control": "no-cache"
             },
             body: JSON.stringify(data)
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log("Login response: ", data);
-            if (data.user) {
+            if (data.user && data.token) {
                 onLoggedIn(data.user, data.token);
             } else {
-                alert("No such user");
+                alert("Invalid username or password");
             }
         })
         .catch((e) => {
@@ -36,26 +36,45 @@ export const LoginView = ({ onLoggedIn }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Username:
-                <input 
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                 />
-            </label>
-            <label>
-                Password:
-                <input 
-                type="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                />
-            </label>
-            <button type="submit">Submit</button>
-        </form>
+        <Container>
+            <Row>
+                <Col>
+                <CardGroup>
+                    <Card>
+                        <Card.Body>
+                        <Card.Title>Login</Card.Title>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group controlId="formUsername">
+                                <Form.Label>Username:</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                    minLength="3"
+                                    placeholder="Enter your Username"
+                                />
+                            </Form.Group>
+
+                            <Form.Group controlId="formPassword">
+                                <Form.Label>Password:</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    placeholder="Enter you Password"
+                                />
+                            </Form.Group>
+                            <Button variant="info" type="submit">
+                                Submit
+                            </Button>
+                        </Form>
+                        </Card.Body>
+                    </Card>
+                </CardGroup>
+                </Col>
+            </Row>
+        </Container>
     );
 };

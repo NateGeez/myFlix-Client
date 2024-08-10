@@ -1,26 +1,31 @@
+import { Button } from "react-bootstrap";
+import Image from 'react-bootstrap/Image';
+
 export const MovieView = ({ movie, onBackClick }) => {
     return (
         <div>
             <div>
-                <img src={movie.image} />
+                <Image src={movie.ImagePath} fluid className="m-auto"/>
             </div>
             <div>
-                <span>Title: </span>
-                <span>{movie.title}</span>
+                <span className="text-md">Title: </span>
+                <span>{movie.Title}</span>
             </div>
             <div>
-                <span>Description: </span>
-                <span>{movie.description}</span>
+                <span className="text-md">Description: </span>
+                <span>{movie.Description}</span>
             </div>
             <div>
-                <span>Genre: </span>
-                <span>{movie.genre}</span>
+                <span className="text-md">Genre: </span>
+                <span>{movie.Genre.Name}</span>
             </div>
             <div>
                 <span>Director: </span>
-                <span>{movie.director}</span>
+                <span>{movie.Director.Name}</span>
+                <p>Bio: {movie.Director.Bio}</p>
+                <p>Birth Date: {movie.Director.Birth}</p>
             </div>
-            <button onClick={onBackClick}>Back</button>
+            <Button variant="info" onClick={onBackClick}>Back</Button>
         </div>
     );
 };
