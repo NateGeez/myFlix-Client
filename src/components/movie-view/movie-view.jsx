@@ -8,8 +8,6 @@ export const MovieView = ({ movies, user }) => {
     const [movie, setMovie] = useState(null);
 
     useEffect(() => {
-        console.log('Movies:', movies); // Debugging
-        console.log('Title from useParams:', Title); // Debugging
 
         if (movies.length > 0 && Title) {
             const foundMovie = movies.find((m) => m._id === Title);
