@@ -9,20 +9,17 @@ export const ProfileView = ({ user, movies }) => {
     const [password, setPassword] = useState('');
     const [favoriteMovies, setFavoriteMovies] = useState([]);
 
-    const formattedBirthday = new Date(birthday).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-
     useEffect(() => {
+        const formattedBirthday = new Date(user.Birthday).toISOString().split('T')[0];
+        setBirthday(formattedBirthday);
+
         const favoriteMovieList = movies.filter((movie) =>
-            user.FavoriteMovies.includes(movie.Title)
+            user.FavoriteMovies.includes(movie._id)
         );
         setFavoriteMovies(favoriteMovieList);
     }, [user, movies]);
 
-    const handleRemoveFromFavorites = () => {
+    const handleRemoveFromFavorites = (Title) => {
         const token = localStorage.getItem('token');
         fetch(`https://natesmovieflix-742bdbb68d51.herokuapp.com/users/${user.Username}/movies/${Title}`, {
             method: 'DELETE',
@@ -33,8 +30,8 @@ export const ProfileView = ({ user, movies }) => {
         })
             .then(response => {
                 if (response.ok) {
-                    setIsFavorite(false);
                     console.log("Movie removed from favorites");
+                    setFavoriteMovies(favoriteMovies.filter((movie) => movie.Title !== Title));
                 } else {
                     console.error("Failed to remove movie from favorites", response.statusText);
                 }
@@ -113,10 +110,7 @@ export const ProfileView = ({ user, movies }) => {
                 </Form.Group>
 
                 <Form.Group controlId="formBirthday">
-                    <Form.Label>
-                        Birthday:
-                        <span className="text-muted"> ({formattedBirthday})</span>
-                    </Form.Label>
+                    <Form.Label>Birthday</Form.Label>
                     <Form.Control
                         type="date"
                         value={birthday}
@@ -154,7 +148,7 @@ export const ProfileView = ({ user, movies }) => {
                                 <Card.Title>{movie.Title}</Card.Title>
                                 <Link to={`/movies/${movie._id}`}>
                                     <Button variant="info" className="mr-2">View Details</Button>
-                                    <Button variant="danger" onClick={() => handleRemoveFromFavorites(movie._id)}>
+                                    <Button variant="danger" onClick={() => handleRemoveFromFavorites(movie.Title)}>
                                         Remove
                                     </Button>
                                 </Link>
