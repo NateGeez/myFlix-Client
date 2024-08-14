@@ -19,9 +19,15 @@ export const ProfileView = ({ user, movies }) => {
         setFavoriteMovies(favoriteMovieList);
     }, [user, movies]);
 
-    const handleRemoveFromFavorites = (Title) => {
+    const handleRemoveFromFavorites = (MovieId) => {
         const token = localStorage.getItem('token');
-        fetch(`https://natesmovieflix-742bdbb68d51.herokuapp.com/users/${user.Username}/movies/${Title}`, {
+
+        if (!user || !user.Username || !MovieId) {
+            console.error("User, Username, or movie ID is not defined");
+            return;
+        }
+
+        fetch(`https://natesmovieflix-742bdbb68d51.herokuapp.com/users/${user.Username}/movies/${MovieId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -31,7 +37,9 @@ export const ProfileView = ({ user, movies }) => {
             .then(response => {
                 if (response.ok) {
                     console.log("Movie removed from favorites");
-                    setFavoriteMovies(favoriteMovies.filter((movie) => movie.Title !== Title));
+                    setFavoriteMovies(prevMovies =>
+                        prevMovies.filter(movie => movie._id !== MovieId)
+                    );
                 } else {
                     console.error("Failed to remove movie from favorites", response.statusText);
                 }
@@ -148,7 +156,7 @@ export const ProfileView = ({ user, movies }) => {
                                 <Card.Title>{movie.Title}</Card.Title>
                                 <Link to={`/movies/${movie._id}`}>
                                     <Button variant="info" className="mr-2">View Details</Button>
-                                    <Button variant="danger" onClick={() => handleRemoveFromFavorites(movie.Title)}>
+                                    <Button variant="danger" onClick={() => handleRemoveFromFavorites(movie._id)}>
                                         Remove
                                     </Button>
                                 </Link>
