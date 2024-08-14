@@ -3,31 +3,34 @@ import { useState, useEffect } from "react";
 import { Button, Image } from "react-bootstrap";
 
 export const MovieView = ({ movies, user }) => {
-    const { Title } = useParams();
+    const { MovieId } = useParams();
+    console.log('MovieId:', MovieId); // Debugging
     const [isFavorite, setIsFavorite] = useState(false);
     const [movie, setMovie] = useState(null);
 
     useEffect(() => {
+        console.log('Movies:', movies);
+        console.log('MovieId', MovieId);
 
-        if (movies.length > 0 && Title) {
-            const foundMovie = movies.find((m) => m._id === Title);
+        if (movies.length > 0 && MovieId) {
+            const foundMovie = movies.find((m) => m._id === MovieId);
             console.log('Found Movie:', foundMovie); // Debugging
             setMovie(foundMovie);
             if (user) {
-                setIsFavorite(user.FavoriteMovies.includes(Title));
+                setIsFavorite(user.FavoriteMovies.includes(MovieId));
             }
         }
-    }, [movies, Title, user]);
+    }, [movies, MovieId, user]);
 
     const handleAddToFavorites = () => {
         const token = localStorage.getItem('token');
 
-        if (!user || !user.Username || !Title) {
-            console.error("User, Title, or token is not defined");
+        if (!user || !user.Username || !MovieId) {
+            console.error("User, MovieId, or token is not defined");
             return;
         }
 
-        fetch(`https://natesmovieflix-742bdbb68d51.herokuapp.com/users/${user.Username}/movies/${Title}`, {
+        fetch(`https://natesmovieflix-742bdbb68d51.herokuapp.com/users/${user.Username}/movies/${MovieId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
