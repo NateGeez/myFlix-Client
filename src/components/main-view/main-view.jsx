@@ -12,6 +12,7 @@ export const MainView = () => {
     const [movies, setMovies] = useState([]);
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
+    const [filterText, setFilterText] = useState("");
 
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
@@ -37,6 +38,10 @@ export const MainView = () => {
                 setMovies(data);
             });
     }, [token]);
+
+    const filteredMovies = movies.filter((movie) =>
+        movie.Title.toLowerCase().includes(filterText.toLowerCase())
+    );
 
     return (
         <BrowserRouter>
@@ -124,7 +129,15 @@ export const MainView = () => {
                                     <Col>The list is empty!</Col>
                                 ) : (
                                     <>
-                                        {movies.map((movie) => (
+                                        <Col md={12} className="mb-3">
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="Search movies by title"
+                                                value={filterText}
+                                                onChange={(e) => setFilterText(e.target.value)}
+                                            />
+                                        </Col>
+                                        {filteredMovies.map((movie) => (
                                             <Col className="mb-4" key={movie._id} md={3}>
                                                 <MovieCard movie={movie} />
                                             </Col>
